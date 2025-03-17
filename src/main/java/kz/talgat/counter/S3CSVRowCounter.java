@@ -37,11 +37,7 @@ public class S3CSVRowCounter implements RequestHandler<S3Event, Integer> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 
-            // Count the rows
-            int rowCount = 0;
-            for (CSVRecord r : csvParser) {
-                rowCount++;
-            }
+            int rowCount = Math.toIntExact(csvParser.stream().count());
 
             // Close resources
             csvParser.close();
@@ -58,7 +54,7 @@ public class S3CSVRowCounter implements RequestHandler<S3Event, Integer> {
             s3Client.close();
 
             return rowCount;
-        } catch (IOException e) {
+        } catch (IOException | ArithmeticException e) {
             context.getLogger().log("Error processing CSV file: " + e.getMessage());
             throw new RuntimeException("Error processing CSV file", e);
         }
