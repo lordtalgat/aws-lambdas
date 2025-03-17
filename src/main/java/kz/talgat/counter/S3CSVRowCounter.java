@@ -22,7 +22,7 @@ public class S3CSVRowCounter implements RequestHandler<S3Event, Integer> {
     public Integer handleRequest(S3Event s3Event, Context context) {
 
         // Get the bucket and object key from the S3 event
-        // You can setup more than one bucket it triggers
+        // You can set up more than one bucket it triggers
         String bucketName = s3Event.getRecords().get(0).getS3().getBucket().getName();
         String fileKey = s3Event.getRecords().get(0).getS3().getObject().getKey();
 
